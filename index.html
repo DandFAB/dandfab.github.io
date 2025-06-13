@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Domestic and Foreign Auto Body Shop - Vehicle Inspection & Estimate</title>
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --text-primary: #333;
+            --text-secondary: #495057;
+            --border-color: #e9ecef;
+            --focus-color: #667eea;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,14 +26,13 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            overflow: hidden;
+            color: var(--text-primary);
+            background: var(--primary-gradient);
+            min-height: 100vh;
         }
 
         .container {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             max-width: 1400px;
@@ -73,17 +85,22 @@
         }
 
         .service-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: var(--secondary-gradient);
             color: white;
             padding: 12px 15px;
             border-radius: 10px;
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
+            border: none;
         }
 
-        .service-card:hover {
+        .service-card:hover,
+        .service-card:focus {
             transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(240, 147, 251, 0.3);
+            outline: 2px solid rgba(255, 255, 255, 0.5);
+            outline-offset: 2px;
         }
 
         .service-card h3 {
@@ -103,7 +120,7 @@
         }
 
         .form-section h2 {
-            color: #495057;
+            color: var(--text-secondary);
             margin-bottom: 15px;
             text-align: center;
             font-size: 1.5rem;
@@ -118,6 +135,7 @@
 
         .form-group {
             margin-bottom: 12px;
+            position: relative;
         }
 
         .form-group.full-width {
@@ -128,8 +146,13 @@
             display: block;
             margin-bottom: 4px;
             font-weight: 600;
-            color: #495057;
+            color: var(--text-secondary);
             font-size: 0.9rem;
+        }
+
+        .form-group.required label::after {
+            content: " *";
+            color: var(--error-color);
         }
 
         .form-group input,
@@ -137,23 +160,49 @@
         .form-group textarea {
             width: 100%;
             padding: 8px;
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
+            background: white;
         }
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
+            outline: 2px solid var(--focus-color);
+            outline-offset: 2px;
+            border-color: var(--focus-color);
             box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input:invalid,
+        .form-group select:invalid,
+        .form-group textarea:invalid {
+            border-color: var(--error-color);
+        }
+
+        .form-group input:valid,
+        .form-group select:valid,
+        .form-group textarea:valid {
+            border-color: var(--success-color);
         }
 
         .form-group textarea {
             resize: vertical;
             min-height: 60px;
+        }
+
+        .field-error {
+            color: var(--error-color);
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .field-error.show {
+            display: block;
+            animation: slideDown 0.3s ease;
         }
 
         .checkbox-group {
@@ -167,21 +216,43 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            background-color: rgba(102, 126, 234, 0.1);
         }
 
         .checkbox-item input[type="checkbox"] {
             width: auto;
             margin: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"]:focus {
+            outline: 2px solid var(--focus-color);
+            outline-offset: 2px;
         }
 
         .checkbox-item label {
             margin: 0;
             font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: normal;
         }
 
-        .submit-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
             padding: 12px 30px;
             border: none;
             border-radius: 25px;
@@ -189,27 +260,63 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: block;
-            margin: 15px auto 0;
-            min-width: 180px;
+            min-width: 140px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .submit-btn:hover {
+        .btn:focus {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3);
         }
 
-        .submit-btn:disabled {
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        .btn[aria-busy="true"]::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .confirmation {
             display: none;
             text-align: center;
             padding: 20px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: var(--success-gradient);
             color: white;
             border-radius: 10px;
             margin-top: 15px;
@@ -230,13 +337,53 @@
             font-size: 0.9rem;
         }
 
-        .error-message {
-            background: #dc3545;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
             display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .privacy-notice {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-left: 4px solid var(--focus-color);
+        }
+
+        .privacy-notice a {
+            color: var(--focus-color);
+            text-decoration: none;
+        }
+
+        .privacy-notice a:hover {
+            text-decoration: underline;
         }
 
         /* Custom scrollbar for right section */
@@ -258,6 +405,43 @@
             background: #a8a8a8;
         }
 
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--focus-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Accessibility improvements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Animations */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -291,6 +475,23 @@
             }
         }
 
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
         @media (max-width: 1200px) {
             .main-content {
                 flex-direction: column;
@@ -312,13 +513,8 @@
                 padding-right: 0;
             }
             
-            body {
-                overflow: auto;
-            }
-            
             .container {
-                height: auto;
-                min-height: 100vh;
+                min-height: auto;
             }
         }
 
@@ -339,10 +535,67 @@
             .header h1 {
                 font-size: 1.8rem;
             }
+            
+            .form-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+                margin: 5px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .service-card {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 5px;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                border-width: 3px;
+            }
+            
+            .btn {
+                border: 2px solid currentColor;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
+        <div class="loading-spinner" role="status" aria-label="Loading"></div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>☆ Domestic and Foreign Auto Body Shop</h1>
@@ -352,17 +605,17 @@
         <div class="main-content">
             <div class="left-section">
                 <div class="services-grid">
-                    <div class="service-card">
+                    <div class="service-card" tabindex="0" role="button" aria-label="Schedule a tow service">
                         <h3>🚛 Schedule a Tow</h3>
                         <p>Professional towing services to bring your vehicle safely to our shop</p>
                     </div>
-                    <div class="service-card">
+                    <div class="service-card" tabindex="0" role="button" aria-label="Schedule an appointment for estimate">
                         <h3>📅 Schedule an Appointment for an Estimate</h3>
                         <p>Professional damage assessment and repair cost estimation</p>
                     </div>
-                    <div class="service-card">
+                    <div class="service-card" tabindex="0" role="button" aria-label="Quick turnaround service">
                         <h3>⚡ Quick Turnaround</h3>
-                        <p>Fast and reliable service. We have quick turnaround times on our repairs. You dont have to wait weeks to get your vehicle repaired. We also offer Rental Cars</p>
+                        <p>Fast and reliable service. We have quick turnaround times on our repairs. You don't have to wait weeks to get your vehicle repaired. We also offer Rental Cars</p>
                     </div>
                 </div>
             </div>
@@ -370,59 +623,81 @@
             <div class="right-section">
                 <div class="form-section">
                     <h2>Schedule a Tow or an Appointment</h2>
-                    <form id="reservationForm">
+                    
+                    <div id="messageContainer" role="alert" aria-live="polite"></div>
+                    
+                    <form id="reservationForm" novalidate>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label for="firstName">First Name *</label>
-                                <input type="text" id="firstName" name="firstName" required>
+                            <div class="form-group required">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required 
+                                       aria-describedby="firstName-error" autocomplete="given-name">
+                                <div class="field-error" id="firstName-error" role="alert"></div>
                             </div>
-                            <div class="form-group">
-                                <label for="lastName">Last Name *</label>
-                                <input type="text" id="lastName" name="lastName" required>
+                            <div class="form-group required">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required 
+                                       aria-describedby="lastName-error" autocomplete="family-name">
+                                <div class="field-error" id="lastName-error" role="alert"></div>
                             </div>
                         </div>
 
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label for="email">Email Address *</label>
-                                <input type="email" id="email" name="email" required>
+                            <div class="form-group required">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" required 
+                                       aria-describedby="email-error" autocomplete="email">
+                                <div class="field-error" id="email-error" role="alert"></div>
                             </div>
-                            <div class="form-group">
-                                <label for="phone">Phone Number *</label>
-                                <input type="tel" id="phone" name="phone" required>
-                            </div>
-                        </div>
-
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="vehicleMake">Vehicle Make *</label>
-                                <input type="text" id="vehicleMake" name="vehicleMake" placeholder="e.g., Toyota, Ford" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="vehicleModel">Vehicle Model *</label>
-                                <input type="text" id="vehicleModel" name="vehicleModel" placeholder="e.g., Camry, F-150" required>
+                            <div class="form-group required">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" required 
+                                       aria-describedby="phone-error" autocomplete="tel"
+                                       placeholder="(555) 123-4567">
+                                <div class="field-error" id="phone-error" role="alert"></div>
                             </div>
                         </div>
 
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label for="vehicleYear">Year *</label>
-                                <input type="number" id="vehicleYear" name="vehicleYear" min="1980" max="2025" required>
+                            <div class="form-group required">
+                                <label for="vehicleMake">Vehicle Make</label>
+                                <input type="text" id="vehicleMake" name="vehicleMake" placeholder="e.g., Toyota, Ford" required
+                                       aria-describedby="vehicleMake-error" autocomplete="off">
+                                <div class="field-error" id="vehicleMake-error" role="alert"></div>
+                            </div>
+                            <div class="form-group required">
+                                <label for="vehicleModel">Vehicle Model</label>
+                                <input type="text" id="vehicleModel" name="vehicleModel" placeholder="e.g., Camry, F-150" required
+                                       aria-describedby="vehicleModel-error" autocomplete="off">
+                                <div class="field-error" id="vehicleModel-error" role="alert"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group required">
+                                <label for="vehicleYear">Year</label>
+                                <select id="vehicleYear" name="vehicleYear" required aria-describedby="vehicleYear-error">
+                                    <option value="">Select Year</option>
+                                </select>
+                                <div class="field-error" id="vehicleYear-error" role="alert"></div>
                             </div>
                             <div class="form-group">
                                 <label for="vehicleMileage">Mileage</label>
-                                <input type="number" id="vehicleMileage" name="vehicleMileage" placeholder="Current mileage">
+                                <input type="number" id="vehicleMileage" name="vehicleMileage" 
+                                       placeholder="Current mileage" min="0" max="999999">
                             </div>
                         </div>
 
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label for="dropOffDate">Preferred Drop-Off Date *</label>
-                                <input type="date" id="dropOffDate" name="dropOffDate" required>
+                            <div class="form-group required">
+                                <label for="dropOffDate">Preferred Drop-Off Date</label>
+                                <input type="date" id="dropOffDate" name="dropOffDate" required
+                                       aria-describedby="dropOffDate-error">
+                                <div class="field-error" id="dropOffDate-error" role="alert"></div>
                             </div>
-                            <div class="form-group">
-                                <label for="dropOffTime">Preferred Time *</label>
-                                <select id="dropOffTime" name="dropOffTime" required>
+                            <div class="form-group required">
+                                <label for="dropOffTime">Preferred Time</label>
+                                <select id="dropOffTime" name="dropOffTime" required aria-describedby="dropOffTime-error">
                                     <option value="">Select Time</option>
                                     <option value="8:00 AM">8:00 AM</option>
                                     <option value="9:00 AM">9:00 AM</option>
@@ -435,12 +710,13 @@
                                     <option value="4:00 PM">4:00 PM</option>
                                     <option value="5:00 PM">5:00 PM</option>
                                 </select>
+                                <div class="field-error" id="dropOffTime-error" role="alert"></div>
                             </div>
                         </div>
 
-                        <div class="form-group full-width">
-                            <label for="serviceType">Service Type *</label>
-                            <div class="checkbox-group">
+                        <div class="form-group full-width required">
+                            <label>Service Type</label>
+                            <div class="checkbox-group" role="group" aria-describedby="serviceType-error">
                                 <div class="checkbox-item">
                                     <input type="checkbox" id="tow" name="serviceType" value="tow">
                                     <label for="tow">Schedule a Tow</label>
@@ -450,24 +726,38 @@
                                     <label for="estimate">I want to bring my vehicle in myself</label>
                                 </div>
                             </div>
+                            <div class="field-error" id="serviceType-error" role="alert"></div>
                         </div>
 
                         <div class="form-group full-width">
                             <label for="concerns">Specific Concerns or Issues</label>
-                            <textarea id="concerns" name="concerns" placeholder="Describe any specific issues or damage..."></textarea>
+                            <textarea id="concerns" name="concerns" 
+                                      placeholder="Describe any specific issues or damage..."></textarea>
                         </div>
 
                         <div class="form-group full-width">
                             <label for="insurance">Insurance Information</label>
-                            <input type="text" id="insurance" name="insurance" placeholder="Insurance company and claim number">
+                            <input type="text" id="insurance" name="insurance" 
+                                   placeholder="Insurance company and claim number">
                         </div>
 
-                        <button type="submit" class="submit-btn">Schedule Reservation</button>
+                        <div class="privacy-notice">
+                            <strong>Privacy Notice:</strong> We collect this information to process your service request. 
+                            Your data is kept secure and never shared with third parties. 
+                            <a href="#" aria-label="Learn more about our privacy policy">Learn more</a>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span class="sr-only">Submit form to </span>Schedule Reservation
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="resetBtn">
+                                Reset Form
+                            </button>
+                        </div>
                     </form>
 
-                    <div id="errorMessage" class="error-message"></div>
-
-                    <div id="confirmation" class="confirmation">
+                    <div id="confirmation" class="confirmation" role="alert" aria-live="polite">
                         <h3>✅ Reservation Submitted!</h3>
                         <p>Thank you for choosing Domestic and Foreign Auto Body Shop.</p>
                         <div id="confirmationDetails" class="confirmation-details"></div>
@@ -480,155 +770,128 @@
         </div>
     </div>
 
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    
     <script>
-        // Initialize EmailJS - Replace with your actual public key
-        // Get your keys from https://dashboard.emailjs.com/
-        emailjs.init('aGw_TJCK7Is9qra9y'); // Replace with your EmailJS public key
+        // Application state
+        const AppState = {
+            lastSubmission: 0,
+            submissionCooldown: 5000, // 5 seconds
+            emailjsInitialized: false,
+            maxDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
+        };
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('reservationForm');
-            const confirmation = document.getElementById('confirmation');
-            const confirmationDetails = document.getElementById('confirmationDetails');
-            const errorMessage = document.getElementById('errorMessage');
-            const dropOffDate = document.getElementById('dropOffDate');
-            const submitBtn = document.querySelector('.submit-btn');
+        // Utility functions
+        const Utils = {
+            sanitizeInput(input) {
+                return input.trim().replace(/[<>]/g, '');
+            },
 
-            // Set minimum date to today
-            const today = new Date().toISOString().split('T')[0];
-            dropOffDate.min = today;
-
-            // Handle service type checkboxes
-            const serviceCheckboxes = document.querySelectorAll('input[name="serviceType"]');
-            serviceCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    if (this.value === 'both' && this.checked) {
-                        serviceCheckboxes.forEach(cb => {
-                            if (cb.value !== 'both') cb.checked = false;
-                        });
-                    } else if (this.value !== 'both' && this.checked) {
-                        document.getElementById('both').checked = false;
-                    }
-                });
-            });
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Hide previous messages
-                errorMessage.style.display = 'none';
-                
-                // Validate service type selection
-                const selectedServices = Array.from(serviceCheckboxes).filter(cb => cb.checked);
-                if (selectedServices.length === 0) {
-                    showError('Please select at least one service type.');
-                    return;
+            formatPhoneNumber(value) {
+                const cleaned = value.replace(/\D/g, '');
+                if (cleaned.length >= 6) {
+                    return `(${cleaned.slice(0,3)}) ${cleaned.slice(3,6)}-${cleaned.slice(6,10)}`;
+                } else if (cleaned.length >= 3) {
+                    return `(${cleaned.slice(0,3)}) ${cleaned.slice(3)}`;
                 }
+                return cleaned;
+            },
 
-                // Disable submit button
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Submitting...';
+            validateEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            },
 
-                // Collect form data
-                const formData = new FormData(form);
-                const reservationData = {};
+            validatePhone(phone) {
+                const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+                return phoneRegex.test(phone.replace(/\D/g, ''));
+            },
+
+            validateDate(dateString) {
+                const selectedDate = new Date(dateString);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                selectedDate.setHours(0, 0, 0, 0);
                 
-                for (let [key, value] of formData.entries()) {
-                    if (reservationData[key]) {
-                        if (Array.isArray(reservationData[key])) {
-                            reservationData[key].push(value);
-                        } else {
-                            reservationData[key] = [reservationData[key], value];
-                        }
-                    } else {
-                        reservationData[key] = value;
-                    }
-                }
+                return selectedDate >= today && selectedDate <= AppState.maxDate;
+            },
 
-                // Generate service types text
-                const serviceTypes = selectedServices.map(cb => {
-                    switch(cb.value) {
-                        case 'tow': return 'Schedule a Tow';
-                        case 'estimate': return 'I want to bring my vehicle in for an estimate';
-                        case 'both': return 'Schedule a Tow & Damage Estimate';
-                        default: return cb.value;
-                    }
-                }).join(', ');
-
-                // Send email notification
-                sendEmailNotification(reservationData, serviceTypes);
-            });
-
-            function sendEmailNotification(data, services) {
-                // Email template parameters
-                const templateParams = {
-                    customer_name: `${data.firstName} ${data.lastName}`,
-                    customer_email: data.email,
-                    customer_phone: data.phone,
-                    vehicle_info: `${data.vehicleYear} ${data.vehicleMake} ${data.vehicleModel}`,
-                    vehicle_mileage: data.vehicleMileage || 'Not specified',
-                    service_type: services,
-                    drop_off_date: new Date(data.dropOffDate).toLocaleDateString(),
-                    drop_off_time: data.dropOffTime,
-                    concerns: data.concerns || 'None specified',
-                    insurance: data.insurance || 'Not provided',
-                    shop_email: 'domesticandforeignab@gmail.com', // Replace with actual shop email
-                    message: `New reservation request from ${data.firstName} ${data.lastName} for ${services}`
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
                 };
-
-                // Send email - Replace with your EmailJS service ID and template ID
-                emailjs.send('service_1w6tl3c', 'template_p2dxkm2', templateParams)
-                    .then(function(response) {
-                        console.log('Email sent successfully:', response);
-                        showConfirmation(data, services);
-                    })
-                    .catch(function(error) {
-                        console.error('Email send failed:', error);
-                        showError('Unable to send notification. Please call 216-288-0668 directly to schedule your appointment.');
-                        resetSubmitButton();
-                    });
             }
+        };
 
-            function showConfirmation(data, services) {
+        // UI Management
+        const UI = {
+            showMessage(message, type = 'error') {
+                const container = document.getElementById('messageContainer');
+                container.innerHTML = `
+                    <div class="message message-${type} show" role="alert">
+                        <strong>${type === 'error' ? '⚠️ Error:' : type === 'success' ? '✅ Success:' : 'ℹ️ Info:'}</strong> 
+                        ${message}
+                    </div>
+                `;
+                container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Auto-hide success messages
+                if (type === 'success') {
+                    setTimeout(() => this.hideMessage(), 5000);
+                }
+            },
+
+            hideMessage() {
+                const container = document.getElementById('messageContainer');
+                container.innerHTML = '';
+            },
+
+            showFieldError(fieldId, message) {
+                const errorElement = document.getElementById(`${fieldId}-error`);
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.classList.add('show');
+                }
+            },
+
+            hideFieldError(fieldId) {
+                const errorElement = document.getElementById(`${fieldId}-error`);
+                if (errorElement) {
+                    errorElement.textContent = '';
+                    errorElement.classList.remove('show');
+                }
+            },
+
+            hideAllFieldErrors() {
+                document.querySelectorAll('.field-error').forEach(error => {
+                    error.textContent = '';
+                    error.classList.remove('show');
+                });
+            },
+
+            setLoadingState(isLoading) {
+                const submitBtn = document.getElementById('submitBtn');
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                
+                submitBtn.disabled = isLoading;
+                loadingOverlay.style.display = isLoading ? 'flex' : 'none';
+                loadingOverlay.setAttribute('aria-hidden', !isLoading);
+                
+                if (isLoading) {
+                    submitBtn.setAttribute('aria-busy', 'true');
+                    submitBtn.innerHTML = '⏳ Submitting...';
+                } else {
+                    submitBtn.removeAttribute('aria-busy');
+                    submitBtn.innerHTML = '<span class="sr-only">Submit form to </span>Schedule Reservation';
+                }
+            },
+
+            showConfirmation(data, services) {
                 const confirmationHTML = `
                     <strong>Reservation Details:</strong><br>
-                    <strong>Name:</strong> ${data.firstName} ${data.lastName}<br>
-                    <strong>Vehicle:</strong> ${data.vehicleYear} ${data.vehicleMake} ${data.vehicleModel}<br>
-                    <strong>Service:</strong> ${services}<br>
-                    <strong>Date & Time:</strong> ${new Date(data.dropOffDate).toLocaleDateString()} at ${data.dropOffTime}<br>
-                    <strong>Contact:</strong> ${data.email} | ${data.phone}
-                `;
-
-                confirmationDetails.innerHTML = confirmationHTML;
-                form.style.display = 'none';
-                confirmation.style.display = 'block';
-            }
-
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.style.display = 'block';
-                resetSubmitButton();
-            }
-
-            function resetSubmitButton() {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Schedule Reservation';
-            }
-
-            // Add smooth hover effects to service cards
-            const serviceCards = document.querySelectorAll('.service-card');
-            serviceCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.02)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'scale(1)';
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+                    <strong>Name:</strong> ${Utils.sanitizeInput(data.firstName)} ${Utils.sanitizeInput(data.lastName)}<br>
+                    <strong>Vehicle:</strong>
