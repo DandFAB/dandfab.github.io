@@ -199,6 +199,12 @@
             box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3);
         }
 
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .confirmation {
             display: none;
             text-align: center;
@@ -222,6 +228,15 @@
             margin-top: 10px;
             text-align: left;
             font-size: 0.9rem;
+        }
+
+        .error-message {
+            background: #dc3545;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
         }
 
         /* Custom scrollbar for right section */
@@ -454,12 +469,14 @@
                         <button type="submit" class="submit-btn">Schedule Reservation</button>
                     </form>
 
+                    <div id="errorMessage" class="error-message"></div>
+
                     <div id="confirmation" class="confirmation">
-                        <h3>✅ Reservation Confirmed!</h3>
+                        <h3>✅ Reservation Submitted!</h3>
                         <p>Thank you for choosing Domestic and Foreign Auto Body Shop.</p>
                         <div id="confirmationDetails" class="confirmation-details"></div>
                         <p style="margin-top: 10px; font-size: 0.9rem;">
-                            📧 Confirmation email sent • 📞 We'll call within 24 hours • 🔧 Bring registration & insurance docs
+                            📧 Please check your email • 📞 We'll call you at <strong>216-288-0668</strong> within 24 hours • 🔧 Bring registration & insurance docs
                         </p>
                     </div>
                 </div>
@@ -467,12 +484,21 @@
         </div>
     </div>
 
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
     <script>
+        // Initialize EmailJS - Replace with your actual public key
+        // Get your keys from https://dashboard.emailjs.com/
+        emailjs.init('aGw_TJCK7Is9qra9y'); // Replace with your EmailJS public key
+
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('reservationForm');
             const confirmation = document.getElementById('confirmation');
             const confirmationDetails = document.getElementById('confirmationDetails');
+            const errorMessage = document.getElementById('errorMessage');
             const dropOffDate = document.getElementById('dropOffDate');
+            const submitBtn = document.querySelector('.submit-btn');
 
             // Set minimum date to today
             const today = new Date().toISOString().split('T')[0];
@@ -495,12 +521,19 @@
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
+                // Hide previous messages
+                errorMessage.style.display = 'none';
+                
                 // Validate service type selection
                 const selectedServices = Array.from(serviceCheckboxes).filter(cb => cb.checked);
                 if (selectedServices.length === 0) {
-                    alert('Please select at least one service type.');
+                    showError('Please select at least one service type.');
                     return;
                 }
+
+                // Disable submit button
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
 
                 // Collect form data
                 const formData = new FormData(form);
@@ -518,7 +551,7 @@
                     }
                 }
 
-                // Generate confirmation details
+                // Generate service types text
                 const serviceTypes = selectedServices.map(cb => {
                     switch(cb.value) {
                         case 'tow': return 'Schedule a Tow';
@@ -528,72 +561,64 @@
                     }
                 }).join(', ');
 
+                // Send email notification
+                sendEmailNotification(reservationData, serviceTypes);
+            });
+
+            function sendEmailNotification(data, services) {
+                // Email template parameters
+                const templateParams = {
+                    customer_name: `${data.firstName} ${data.lastName}`,
+                    customer_email: data.email,
+                    customer_phone: data.phone,
+                    vehicle_info: `${data.vehicleYear} ${data.vehicleMake} ${data.vehicleModel}`,
+                    vehicle_mileage: data.vehicleMileage || 'Not specified',
+                    service_type: services,
+                    drop_off_date: new Date(data.dropOffDate).toLocaleDateString(),
+                    drop_off_time: data.dropOffTime,
+                    concerns: data.concerns || 'None specified',
+                    insurance: data.insurance || 'Not provided',
+                    shop_email: 'shop@autobody.com', // Replace with actual shop email
+                    message: `New reservation request from ${data.firstName} ${data.lastName} for ${services}`
+                };
+
+                // Send email - Replace with your EmailJS service ID and template ID
+                emailjs.send('service_1w6tl3c', 'template_p2dxkm2', templateParams)
+                    .then(function(response) {
+                        console.log('Email sent successfully:', response);
+                        showConfirmation(data, services);
+                    })
+                    .catch(function(error) {
+                        console.error('Email send failed:', error);
+                        showError('Unable to send notification. Please call 216-288-0668 directly to schedule your appointment.');
+                        resetSubmitButton();
+                    });
+            }
+
+            function showConfirmation(data, services) {
                 const confirmationHTML = `
                     <strong>Reservation Details:</strong><br>
-                    <strong>Name:</strong> ${reservationData.firstName} ${reservationData.lastName}<br>
-                    <strong>Vehicle:</strong> ${reservationData.vehicleYear} ${reservationData.vehicleMake} ${reservationData.vehicleModel}<br>
-                    <strong>Service:</strong> ${serviceTypes}<br>
-                    <strong>Date & Time:</strong> ${new Date(reservationData.dropOffDate).toLocaleDateString()} at ${reservationData.dropOffTime}<br>
-                    <strong>Contact:</strong> ${reservationData.email} | ${reservationData.phone}
+                    <strong>Name:</strong> ${data.firstName} ${data.lastName}<br>
+                    <strong>Vehicle:</strong> ${data.vehicleYear} ${data.vehicleMake} ${data.vehicleModel}<br>
+                    <strong>Service:</strong> ${services}<br>
+                    <strong>Date & Time:</strong> ${new Date(data.dropOffDate).toLocaleDateString()} at ${data.dropOffTime}<br>
+                    <strong>Contact:</strong> ${data.email} | ${data.phone}
                 `;
 
                 confirmationDetails.innerHTML = confirmationHTML;
-                
-                // Send SMS notification
-                sendSMSNotification(reservationData, serviceTypes);
-                
-                // Hide form and show confirmation
                 form.style.display = 'none';
                 confirmation.style.display = 'block';
-            });
+            }
 
-            // Function to send SMS notification
-            function sendSMSNotification(data, services) {
-                const smsMessage = `NEW RESERVATION - Domestic & Foreign Auto Body Shop
-                
-Customer: ${data.firstName} ${data.lastName}
-Phone: ${data.phone}
-Email: ${data.email}
-Vehicle: ${data.vehicleYear} ${data.vehicleMake} ${data.vehicleModel}
-${data.vehicleMileage ? `Mileage: ${data.vehicleMileage}` : ''}
-Service: ${services}
-Date: ${new Date(data.dropOffDate).toLocaleDateString()}
-Time: ${data.dropOffTime}
-${data.concerns ? `Concerns: ${data.concerns}` : ''}
-${data.insurance ? `Insurance: ${data.insurance}` : ''}`;
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                resetSubmitButton();
+            }
 
-                fetch('https://textbelt.com/text', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        phone: '216-288-0668',
-                        message: smsMessage,
-                        key: 'textbelt'
-                    })
-                })
-                .then(response => response.json())
-                .then(result => {
-                    console.log('SMS sent:', result);
-                    if (result.success) {
-                        const smsConfirmation = document.createElement('p');
-                        smsConfirmation.innerHTML = '📱 SMS notification sent to shop!';
-                        smsConfirmation.style.marginTop = '10px';
-                        smsConfirmation.style.fontWeight = 'bold';
-                        smsConfirmation.style.color = '#28a745';
-                        confirmation.appendChild(smsConfirmation);
-                    }
-                })
-                .catch(error => {
-                    console.error('SMS error:', error);
-                    const fallbackMsg = document.createElement('p');
-                    fallbackMsg.innerHTML = '📞 Please call 216-288-0668 to confirm your appointment.';
-                    fallbackMsg.style.marginTop = '10px';
-                    fallbackMsg.style.fontWeight = 'bold';
-                    fallbackMsg.style.color = '#ffc107';
-                    confirmation.appendChild(fallbackMsg);
-                });
+            function resetSubmitButton() {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Schedule Reservation';
             }
 
             // Add smooth hover effects to service cards
