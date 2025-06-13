@@ -362,14 +362,14 @@
                     </div>
                     <div class="service-card">
                         <h3>⚡ Quick Turnaround</h3>
-                        <p>Fast, reliable service with detailed reports delivered within 24-48 hours</p>
+                        <p>Fast and reliable service. We have quick turnaround times on our repairs. You dont have to wait weeks to get your vehicle repaired. We also offer Rental Cars</p>
                     </div>
                 </div>
             </div>
 
             <div class="right-section">
                 <div class="form-section">
-                    <h2>Schedule Your Vehicle Drop-Off</h2>
+                    <h2>Schedule a Tow or an Appointment</h2>
                     <form id="reservationForm">
                         <div class="form-grid">
                             <div class="form-group">
@@ -447,7 +447,7 @@
                                 </div>
                                 <div class="checkbox-item">
                                     <input type="checkbox" id="estimate" name="serviceType" value="estimate">
-                                    <label for="estimate">Damage Estimate</label>
+                                    <label for="estimate"></label>
                                 </div>
                                 <div class="checkbox-item">
                                     <input type="checkbox" id="both" name="serviceType" value="both">
@@ -555,7 +555,7 @@
                 const serviceTypes = selectedServices.map(cb => {
                     switch(cb.value) {
                         case 'tow': return 'Schedule a Tow';
-                        case 'estimate': return 'Damage Estimate';
+                        case 'estimate': return 'I want to bring my vehicle in for an estimate';
                         case 'both': return 'Schedule a Tow & Damage Estimate';
                         default: return cb.value;
                     }
