@@ -43,18 +43,18 @@
         .header {
             text-align: center;
             color: white;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             animation: fadeInDown 0.8s ease-out;
         }
 
         .header h1 {
-            font-size: 2rem;
-            margin-bottom: 3px;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .header p {
-            font-size: 0.9rem;
+            font-size: 1rem;
             opacity: 0.9;
         }
 
@@ -63,11 +63,11 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 15px;
+            padding: 20px;
             box-shadow: 0 15px 30px rgba(0,0,0,0.1);
             animation: fadeInUp 0.8s ease-out;
             display: flex;
-            gap: 15px;
+            gap: 20px;
             overflow: hidden;
         }
 
@@ -80,15 +80,15 @@
         .services-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .service-card {
             background: var(--secondary-gradient);
             color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 12px 15px;
+            border-radius: 10px;
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
@@ -104,12 +104,12 @@
         }
 
         .service-card h3 {
-            font-size: 0.9rem;
-            margin-bottom: 3px;
+            font-size: 1rem;
+            margin-bottom: 5px;
         }
 
         .service-card p {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             opacity: 0.9;
         }
 
@@ -121,20 +121,20 @@
 
         .form-section h2 {
             color: var(--text-secondary);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
         .form-group {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             position: relative;
         }
 
@@ -144,10 +144,10 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
             font-weight: 600;
             color: var(--text-secondary);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
 
         .form-group.required label::after {
@@ -159,19 +159,12 @@
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 6px 8px;
+            padding: 8px;
             border: 2px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 13px;
+            border-radius: 6px;
+            font-size: 14px;
             transition: all 0.3s ease;
             background: white;
-            height: 32px;
-        }
-
-        .form-group textarea {
-            height: 50px;
-            resize: vertical;
-            min-height: 50px;
         }
 
         .form-group input:focus,
@@ -195,10 +188,15 @@
             border-color: var(--success-color);
         }
 
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
         .field-error {
             color: var(--error-color);
-            font-size: 0.7rem;
-            margin-top: 2px;
+            font-size: 0.8rem;
+            margin-top: 4px;
             display: none;
         }
 
@@ -209,18 +207,18 @@
 
         .checkbox-group {
             display: flex;
-            gap: 12px;
-            margin-top: 3px;
+            gap: 15px;
+            margin-top: 5px;
             flex-wrap: wrap;
         }
 
         .checkbox-item {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             cursor: pointer;
-            padding: 3px;
-            border-radius: 3px;
+            padding: 4px;
+            border-radius: 4px;
             transition: background-color 0.2s ease;
         }
 
@@ -241,28 +239,28 @@
 
         .checkbox-item label {
             margin: 0;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             cursor: pointer;
             font-weight: normal;
         }
 
         .form-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             justify-content: center;
-            margin-top: 15px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 8px 20px;
+            padding: 12px 30px;
             border: none;
-            border-radius: 20px;
-            font-size: 14px;
+            border-radius: 25px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 120px;
+            min-width: 140px;
             position: relative;
             overflow: hidden;
         }
@@ -302,14 +300,14 @@
         .btn[aria-busy="true"]::after {
             content: "";
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             margin: auto;
             border: 2px solid transparent;
             border-top-color: #ffffff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            left: 6px;
+            left: 8px;
             top: 50%;
             transform: translateY(-50%);
         }
@@ -317,35 +315,34 @@
         .confirmation {
             display: none;
             text-align: center;
-            padding: 15px;
+            padding: 20px;
             background: var(--success-gradient);
             color: white;
-            border-radius: 8px;
-            margin-top: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
             animation: slideIn 0.5s ease-out;
         }
 
         .confirmation h3 {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
         }
 
         .confirmation-details {
             background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 8px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
             text-align: left;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
 
         .message {
-            padding: 10px;
-            border-radius: 6px;
-            margin: 8px 0;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
             display: none;
             animation: slideDown 0.3s ease;
-            font-size: 0.85rem;
         }
 
         .message.show {
@@ -372,12 +369,12 @@
 
         .privacy-notice {
             background: rgba(102, 126, 234, 0.1);
-            padding: 8px;
-            border-radius: 6px;
-            margin: 10px 0;
-            font-size: 0.75rem;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.85rem;
             color: var(--text-secondary);
-            border-left: 3px solid var(--focus-color);
+            border-left: 4px solid var(--focus-color);
         }
 
         .privacy-notice a {
@@ -391,17 +388,17 @@
 
         /* Custom scrollbar for right section */
         .right-section::-webkit-scrollbar {
-            width: 4px;
+            width: 6px;
         }
 
         .right-section::-webkit-scrollbar-track {
             background: #f1f1f1;
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
         .right-section::-webkit-scrollbar-thumb {
             background: #c1c1c1;
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
         .right-section::-webkit-scrollbar-thumb:hover {
@@ -423,10 +420,10 @@
         }
 
         .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--focus-color);
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--focus-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -507,7 +504,7 @@
             
             .services-grid {
                 grid-template-columns: repeat(3, 1fr);
-                margin-bottom: 10px;
+                margin-bottom: 15px;
             }
             
             .right-section {
@@ -532,11 +529,11 @@
             
             .checkbox-group {
                 flex-direction: column;
-                gap: 6px;
+                gap: 8px;
             }
             
             .header h1 {
-                font-size: 1.6rem;
+                font-size: 1.8rem;
             }
             
             .form-actions {
@@ -546,22 +543,22 @@
             
             .btn {
                 width: 100%;
-                max-width: 250px;
+                max-width: 300px;
             }
         }
 
         @media (max-width: 480px) {
             .main-content {
-                padding: 12px;
+                padding: 15px;
                 margin: 5px;
             }
             
             .header h1 {
-                font-size: 1.4rem;
+                font-size: 1.6rem;
             }
             
             .service-card {
-                padding: 8px;
+                padding: 10px;
             }
             
             .container {
@@ -630,12 +627,19 @@
                     <div id="messageContainer" role="alert" aria-live="polite"></div>
                     
                     <form id="reservationForm" novalidate>
-                        <div class="form-group required full-width">
-                            <label for="fullName">Full Name</label>
-                            <input type="text" id="fullName" name="fullName" required 
-                                   aria-describedby="fullName-error" autocomplete="name"
-                                   placeholder="First and Last Name">
-                            <div class="field-error" id="fullName-error" role="alert"></div>
+                        <div class="form-grid">
+                            <div class="form-group required">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required 
+                                       aria-describedby="firstName-error" autocomplete="given-name">
+                                <div class="field-error" id="firstName-error" role="alert"></div>
+                            </div>
+                            <div class="form-group required">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required 
+                                       aria-describedby="lastName-error" autocomplete="family-name">
+                                <div class="field-error" id="lastName-error" role="alert"></div>
+                            </div>
                         </div>
 
                         <div class="form-grid">
@@ -656,11 +660,20 @@
 
                         <div class="form-grid">
                             <div class="form-group required">
-                                <label for="vehicleInfo">Vehicle Make & Model</label>
-                                <input type="text" id="vehicleInfo" name="vehicleInfo" placeholder="e.g., Toyota Camry, Ford F-150" required
-                                       aria-describedby="vehicleInfo-error" autocomplete="off">
-                                <div class="field-error" id="vehicleInfo-error" role="alert"></div>
+                                <label for="vehicleMake">Vehicle Make</label>
+                                <input type="text" id="vehicleMake" name="vehicleMake" placeholder="e.g., Toyota, Ford" required
+                                       aria-describedby="vehicleMake-error" autocomplete="off">
+                                <div class="field-error" id="vehicleMake-error" role="alert"></div>
                             </div>
+                            <div class="form-group required">
+                                <label for="vehicleModel">Vehicle Model</label>
+                                <input type="text" id="vehicleModel" name="vehicleModel" placeholder="e.g., Camry, F-150" required
+                                       aria-describedby="vehicleModel-error" autocomplete="off">
+                                <div class="field-error" id="vehicleModel-error" role="alert"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
                             <div class="form-group required">
                                 <label for="vehicleYear">Year</label>
                                 <select id="vehicleYear" name="vehicleYear" required aria-describedby="vehicleYear-error">
@@ -668,11 +681,16 @@
                                 </select>
                                 <div class="field-error" id="vehicleYear-error" role="alert"></div>
                             </div>
+                            <div class="form-group">
+                                <label for="vehicleMileage">Mileage</label>
+                                <input type="number" id="vehicleMileage" name="vehicleMileage" 
+                                       placeholder="Current mileage" min="0" max="999999">
+                            </div>
                         </div>
 
                         <div class="form-grid">
                             <div class="form-group required">
-                                <label for="dropOffDate">Preferred Pick-Up or Drop-Off Date</label>
+                                <label for="dropOffDate">Preferred Drop-Off Date</label>
                                 <input type="date" id="dropOffDate" name="dropOffDate" required
                                        aria-describedby="dropOffDate-error">
                                 <div class="field-error" id="dropOffDate-error" role="alert"></div>
@@ -712,7 +730,7 @@
                         </div>
 
                         <div class="form-group full-width">
-                            <label for="concerns">Location of the Vehicle and keys - Any Specific Concerns or Issues?</label>
+                            <label for="concerns">Specific Concerns or Issues</label>
                             <textarea id="concerns" name="concerns" 
                                       placeholder="Describe any specific issues or damage..."></textarea>
                         </div>
@@ -743,7 +761,7 @@
                         <h3>✅ Reservation Submitted!</h3>
                         <p>Thank you for choosing Domestic and Foreign Auto Body Shop.</p>
                         <div id="confirmationDetails" class="confirmation-details"></div>
-                        <p style="margin-top: 8px; font-size: 0.8rem;">
+                        <p style="margin-top: 10px; font-size: 0.9rem;">
                             📧 Please check your email • 📞 We'll call you at <strong>216-288-0668</strong> within 24 hours • 🔧 Bring registration & insurance docs
                         </p>
                     </div>
@@ -875,31 +893,5 @@
             showConfirmation(data, services) {
                 const confirmationHTML = `
                     <strong>Reservation Details:</strong><br>
-                    <strong>Name:</strong> ${Utils.sanitizeInput(data.fullName)}<br>
-                    <strong>Vehicle:</strong> ${Utils.sanitizeInput(data.vehicleYear)} ${Utils.sanitizeInput(data.vehicleInfo)}<br>
-                    <strong>Date & Time:</strong> ${data.dropOffDate} at ${data.dropOffTime}<br>
-                    <strong>Service:</strong> ${services.join(', ')}<br>
-                    <strong>Contact:</strong> ${Utils.sanitizeInput(data.email)} | ${Utils.sanitizeInput(data.phone)}
-                `;
-                
-                document.getElementById('confirmationDetails').innerHTML = confirmationHTML;
-                document.getElementById('confirmation').style.display = 'block';
-                document.getElementById('reservationForm').style.display = 'none';
-                
-                // Scroll to confirmation
-                document.getElementById('confirmation').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-            }
-        };
-
-        // Form validation
-        const FormValidator = {
-            validateField(field) {
-                const value = field.value.trim();
-                const fieldId = field.id;
-                let isValid = true;
-                let errorMessage = '';
-
-                // Clear previous errors
+                    <strong>Name:</strong> ${Utils.sanitizeInput(data.firstName)} ${Utils.sanitizeInput(data.lastName)}<br>
+                    <strong>Vehicle:</strong>
