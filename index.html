@@ -156,6 +156,43 @@
             min-height: 60px;
         }
 
+        /* Custom year input styling */
+        .year-input-container {
+            position: relative;
+        }
+
+        .year-select {
+            width: 100%;
+        }
+
+        .custom-year-container {
+            margin-top: 8px;
+            display: none;
+        }
+
+        .custom-year-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .add-year-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .add-year-btn:hover {
+            background: #218838;
+        }
+
         .checkbox-group {
             display: flex;
             gap: 15px;
@@ -407,7 +444,16 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="vehicleYear">Vehicle Year *</label>
-                                <input type="number" id="vehicleYear" name="vehicleYear" min="1980" max="2025" required>
+                                <div class="year-input-container">
+                                    <select id="vehicleYear" name="vehicleYear" class="year-select" required>
+                                        <option value="">Select Year</option>
+                                        <!-- Years will be populated by JavaScript -->
+                                    </select>
+                                    <div class="custom-year-container" id="customYearContainer">
+                                        <input type="number" id="customYearInput" class="custom-year-input" placeholder="Enter custom year" min="1900" max="2030">
+                                        <button type="button" id="addYearBtn" class="add-year-btn">Add Year</button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="vehicleMileage">Mileage</label>
@@ -447,7 +493,7 @@
                                 </div>
                                 <div class="checkbox-item">
                                     <input type="checkbox" id="estimate" name="serviceType" value="estimate">
-                                    <label for="estimate"></label>
+                                    <label for="estimate">Schedule an Appointment for an Estimate</label>
                                 </div>
                                 <div class="checkbox-item">
                                     <input type="checkbox" id="both" name="serviceType" value="both">
@@ -499,10 +545,102 @@
             const errorMessage = document.getElementById('errorMessage');
             const dropOffDate = document.getElementById('dropOffDate');
             const submitBtn = document.querySelector('.submit-btn');
+            const vehicleYear = document.getElementById('vehicleYear');
+            const customYearContainer = document.getElementById('customYearContainer');
+            const customYearInput = document.getElementById('customYearInput');
+            const addYearBtn = document.getElementById('addYearBtn');
 
             // Set minimum date to today
             const today = new Date().toISOString().split('T')[0];
             dropOffDate.min = today;
+
+            // Populate year dropdown
+            populateYearDropdown();
+
+            function populateYearDropdown() {
+                const currentYear = new Date().getFullYear();
+                const startYear = 1980;
+                
+                // Clear existing options except the first one
+                vehicleYear.innerHTML = '<option value="">Select Year</option>';
+                
+                // Add years from current year down to 1980
+                for (let year = currentYear; year >= startYear; year--) {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    vehicleYear.appendChild(option);
+                }
+                
+                // Add "Other" option to show custom input
+                const otherOption = document.createElement('option');
+                otherOption.value = 'other';
+                otherOption.textContent = 'Other (Enter Custom Year)';
+                vehicleYear.appendChild(otherOption);
+            }
+
+            // Handle year dropdown change
+            vehicleYear.addEventListener('change', function() {
+                if (this.value === 'other') {
+                    customYearContainer.style.display = 'block';
+                    customYearInput.focus();
+                } else {
+                    customYearContainer.style.display = 'none';
+                    customYearInput.value = '';
+                }
+            });
+
+            // Handle adding custom year
+            addYearBtn.addEventListener('click', function() {
+                const customYear = parseInt(customYearInput.value);
+                
+                if (!customYear || customYear < 1900 || customYear > 2030) {
+                    alert('Please enter a valid year between 1900 and 2030');
+                    return;
+                }
+                
+                // Check if year already exists
+                const existingOptions = Array.from(vehicleYear.options);
+                const yearExists = existingOptions.some(option => parseInt(option.value) === customYear);
+                
+                if (yearExists) {
+                    // Select the existing year
+                    vehicleYear.value = customYear;
+                    customYearContainer.style.display = 'none';
+                    customYearInput.value = '';
+                    return;
+                }
+                
+                // Add new year option
+                const newOption = document.createElement('option');
+                newOption.value = customYear;
+                newOption.textContent = customYear;
+                
+                // Find correct position to insert (keep chronological order)
+                let insertPosition = 1; // After "Select Year" option
+                for (let i = 1; i < vehicleYear.options.length - 1; i++) { // Exclude "Other" option
+                    if (parseInt(vehicleYear.options[i].value) < customYear) {
+                        insertPosition = i;
+                        break;
+                    }
+                    insertPosition = i + 1;
+                }
+                
+                vehicleYear.insertBefore(newOption, vehicleYear.options[insertPosition]);
+                
+                // Select the new year
+                vehicleYear.value = customYear;
+                customYearContainer.style.display = 'none';
+                customYearInput.value = '';
+            });
+
+            // Allow Enter key to add custom year
+            customYearInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addYearBtn.click();
+                }
+            });
 
             // Handle service type checkboxes
             const serviceCheckboxes = document.querySelectorAll('input[name="serviceType"]');
@@ -531,6 +669,12 @@
                     return;
                 }
 
+                // Validate year selection
+                if (vehicleYear.value === 'other') {
+                    showError('Please add your custom year or select from the dropdown.');
+                    return;
+                }
+
                 // Disable submit button
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Submitting...';
@@ -555,7 +699,7 @@
                 const serviceTypes = selectedServices.map(cb => {
                     switch(cb.value) {
                         case 'tow': return 'Schedule a Tow';
-                        case 'estimate': return 'I want to bring my vehicle in for an estimate';
+                        case 'estimate': return 'Schedule an Appointment for an Estimate';
                         case 'both': return 'Schedule a Tow & Damage Estimate';
                         default: return cb.value;
                     }
