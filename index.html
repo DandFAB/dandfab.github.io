@@ -447,7 +447,11 @@
                                 </div>
                                 <div class="checkbox-item">
                                     <input type="checkbox" id="estimate" name="serviceType" value="estimate">
-                                    <label for="estimate">I want to bring my vehicle in myself</label>
+                                    <label for="estimate"></label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="both" name="serviceType" value="both">
+                                    <label for="both">Both Services</label>
                                 </div>
                             </div>
                         </div>
@@ -574,8 +578,8 @@
                     drop_off_time: data.dropOffTime,
                     concerns: data.concerns || 'None specified',
                     insurance: data.insurance || 'Not provided',
-                    shop_email: 'domesticandforeignab@gmail.com', // Replace with actual shop email
-                    message: `New reservation request from ${data.firstName} ${data.lastName}  ${data.vehicleYear} ${data.vehicleMake} ${data.vehicleModel}` ${services}`
+                    shop_email: 'shop@autobody.com', // Replace with actual shop email
+                    message: `New reservation request from ${data.firstName} ${data.lastName} for ${services}`
                 };
 
                 // Send email - Replace with your EmailJS service ID and template ID
